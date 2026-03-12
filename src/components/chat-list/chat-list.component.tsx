@@ -1,8 +1,17 @@
 import { JSX } from "react";
 import * as C from "./chat-list.styles"
+import { ChatListItem } from "../chat-list-item/chat-list-item.component";
 
-export const ChatList = (): JSX.Element => {
+type Props = {
+    chatList: any[];
+}
+
+export const ChatList = ({ chatList }: Props): JSX.Element => {
     return (
-        <C.ChatListArea>...</C.ChatListArea>
+        <C.ChatListArea>
+            {chatList.map((chat, index): JSX.Element => (
+                <ChatListItem key={index}/>
+            ))}
+        </C.ChatListArea>
     );
 }
