@@ -20,4 +20,6 @@ export const SearchArea = styled.div``;
 
 export const ChatListArea = styled.div``;
 
-export const ContentArea = styled.div``;
+export const ContentArea = styled.div`
+    flex: 1;
+`;

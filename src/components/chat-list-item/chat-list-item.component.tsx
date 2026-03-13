@@ -1,15 +1,20 @@
 import { JSX } from "react";
 import * as C from "./chat-list-item.styles"
-import avatarSvg from "../../assets/svgs/avatar.svg";
 
-export const ChatListItem = (): JSX.Element => {
+type Props = {
+    onClick: () => void;
+    active: boolean;
+    chat: any;
+}
+
+export const ChatListItem = ({ onClick, active, chat }: Props): JSX.Element => {
     return (
-        <C.ChatListItemArea>
-            <C.ChatListItemAvatar src={avatarSvg} alt="Avatar"/>
+        <C.ChatListItemArea onClick={onClick} active={active}>
+            <C.ChatListItemAvatar src={chat.avatar} alt="Avatar"/>
 
             <C.ChatListItemLines>
                 <C.ChatListItemLine className="chatListItemName">
-                    <C.ChatListItemName>Dua Lipa</C.ChatListItemName>
+                    <C.ChatListItemName>{chat.title}</C.ChatListItemName>
                     <C.ChatListItemDate>19:00</C.ChatListItemDate>
                 </C.ChatListItemLine>
                 <C.ChatListItemLine className="chatListItemLastMsg">
