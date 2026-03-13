@@ -1,9 +1,10 @@
 import { JSX } from "react";
 import * as C from "./chat-list.styles"
 import { ChatListItem } from "../chat-list-item/chat-list-item.component";
+import { ChatListItemType } from "../../types/chat-list-item.type";
 
 type Props = {
-    chatList: any[];
+    chatList:   ChatListItemType[];
     onClick: (index: number) => void;
     activeChatId: number | undefined;
 }
@@ -11,7 +12,7 @@ type Props = {
 export const ChatList = ({ chatList, onClick, activeChatId }: Props): JSX.Element => {
     return (
         <C.ChatListArea>
-            {chatList.map((chat, index: number): JSX.Element => (
+            {chatList.map((chat: ChatListItemType, index: number): JSX.Element => (
                 <ChatListItem 
                     key={index}
                     chat={chat}

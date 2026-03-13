@@ -1,10 +1,11 @@
 import { JSX } from "react";
 import * as C from "./chat-list-item.styles"
+import { ChatListItemType } from "../../types/chat-list-item.type";
 
 type Props = {
     onClick: () => void;
     active: boolean;
-    chat: any;
+    chat: ChatListItemType;
 }
 
 export const ChatListItem = ({ onClick, active, chat }: Props): JSX.Element => {

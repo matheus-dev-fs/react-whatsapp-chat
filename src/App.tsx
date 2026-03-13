@@ -7,11 +7,12 @@ import { ChatList } from "./components/chat-list/chat-list.component";
 import { ChatIntro } from "./components/chat-intro/chat-intro.component";
 import { ChatWindow } from "./components/chat-window/chat-window.component";
 import avatarSvg from "./assets/svgs/avatar.svg";
+import { ChatListItemType } from "./types/chat-list-item.type";
 
 const App = (): JSX.Element => {
     const [chatList, setChatList]: [
-        any[],
-        Dispatch<SetStateAction<any[]>>
+        ChatListItemType[],
+        Dispatch<SetStateAction<ChatListItemType[]>>
     ] = useState([
         {
             chatId: 1,
@@ -46,9 +47,9 @@ const App = (): JSX.Element => {
     ]);
 
     const [activeChat, setActiveChat]: [
-        any,
-        Dispatch<SetStateAction<any>>
-    ] = useState<any>({});
+        ChatListItemType | undefined,
+        Dispatch<SetStateAction<ChatListItemType | undefined>>
+    ] = useState<ChatListItemType | undefined>(undefined);
 
     const handleChatListItemClick = (index: number): void => {
         setActiveChat(chatList[index]);
@@ -64,14 +65,14 @@ const App = (): JSX.Element => {
                     <ChatList 
                         chatList={chatList} 
                         onClick={handleChatListItemClick}
-                        activeChatId={activeChat.chatId} 
+                        activeChatId={activeChat?.chatId} 
                     />
                 </C.Sidebar>
                 <C.ContentArea>
-                    {activeChat.chatId !== undefined &&
+                    {activeChat?.chatId !== undefined &&
                         <ChatWindow />
                     }
-                    {activeChat.chatId === undefined &&
+                    {activeChat?.chatId === undefined &&
                         <ChatIntro />
                     }
                 </C.ContentArea>
