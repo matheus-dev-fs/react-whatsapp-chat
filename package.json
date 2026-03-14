@@ -45,10 +45,11 @@
         ]
     },
     "devDependencies": {
-        "@types/styled-components": "^5.1.36",
+        "@types/dom-speech-recognition": "^0.0.7",
         "@types/jest": "^27.5.2",
         "@types/node": "^16.18.126",
         "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3"
+        "@types/react-dom": "^19.2.3",
+        "@types/styled-components": "^5.1.36"
     }
 }

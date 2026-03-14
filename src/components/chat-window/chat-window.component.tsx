@@ -7,15 +7,31 @@ import { ChatWindowEmojiArea } from "./chat-window-emoji-area/chat-window-emoji-
 import { EmojiClickData } from "emoji-picker-react";
 
 export const ChatWindow = (): JSX.Element => {
+    const SpeechRecognitionCtor: {
+        new(): SpeechRecognition;
+        prototype: SpeechRecognition;
+    } = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    let recognition: SpeechRecognition | null = null;
+
+    if (SpeechRecognitionCtor) {
+        recognition = new SpeechRecognitionCtor();
+    }
+
     const [isEmojiAreaOpen, setIsEmojiAreaOpen]: [
-        boolean, 
+        boolean,
         Dispatch<SetStateAction<boolean>>
     ] = useState<boolean>(false);
 
     const [text, setText]: [
-        string, 
+        string,
         Dispatch<SetStateAction<string>>
     ] = useState<string>("");
+
+    const [listening, setListening]: [
+        boolean,
+        Dispatch<SetStateAction<boolean>>
+    ] = useState<boolean>(false);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const newText: string = event.target.value;
@@ -25,6 +41,25 @@ export const ChatWindow = (): JSX.Element => {
     const handleEmojiClick = (emojiData: EmojiClickData): void => {
         const emoji: string = emojiData.emoji;
         setText((prevText: string): string => prevText + emoji);
+    };
+
+    const handleSendClick = (): void => {
+
+    };
+
+    const handleMicClick = (): void => {
+        if (!recognition) {
+            return;
+        }
+
+        recognition.onstart = (): void => setListening(true);
+        recognition.onend = (): void => setListening(false);
+
+        recognition.onresult = (e: SpeechRecognitionEvent): void => {
+            setText((prev) => prev + e.results[0][0].transcript);
+        };
+
+        recognition.start();
     };
 
     const openEmojiArea = (): void => {
@@ -39,16 +74,19 @@ export const ChatWindow = (): JSX.Element => {
         <C.ChatWindowArea>
             <ChatWindowHeader />
             <ChatWindowBody />
-            <ChatWindowEmojiArea 
-                onEmojiClick={handleEmojiClick} 
+            <ChatWindowEmojiArea
+                onEmojiClick={handleEmojiClick}
                 isEmojiAreaOpen={isEmojiAreaOpen}
             />
-            <ChatWindowFooter 
-                openEmojiArea={openEmojiArea} 
-                closeEmojiArea={closeEmojiArea} 
+            <ChatWindowFooter
+                openEmojiArea={openEmojiArea}
+                closeEmojiArea={closeEmojiArea}
                 isEmojiAreaOpen={isEmojiAreaOpen}
                 text={text}
                 handleInputChange={handleInputChange}
+                handleSendClick={handleSendClick}
+                handleMicClick={handleMicClick}
+                listening={listening}
             />
         </C.ChatWindowArea>
     )

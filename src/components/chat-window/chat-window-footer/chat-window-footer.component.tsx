@@ -12,14 +12,20 @@ type Props = {
     isEmojiAreaOpen: boolean;
     text: string;
     handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleSendClick?: () => void;
+    handleMicClick?: () => void;
+    listening: boolean;
 }
 
-export const ChatWindowFooter = ({ 
-    openEmojiArea, 
-    closeEmojiArea, 
-    isEmojiAreaOpen, 
-    text, 
-    handleInputChange 
+export const ChatWindowFooter = ({
+    openEmojiArea,
+    closeEmojiArea,
+    isEmojiAreaOpen,
+    text,
+    handleInputChange,
+    handleSendClick,
+    handleMicClick,
+    listening
 }: Props): JSX.Element => {
     return (
         <C.ChatWindowFooterArea>
@@ -34,17 +40,25 @@ export const ChatWindowFooter = ({
                 </Button>
             </C.ChatWindowFooterPre>
             <C.ChatWindowFooterInputArea>
-                <C.ChatWindowFooterInput 
-                    type="text" 
-                    placeholder="Digite uma mensagem" 
+                <C.ChatWindowFooterInput
+                    type="text"
+                    placeholder="Digite uma mensagem"
                     value={text}
                     onChange={handleInputChange}
                 />
             </C.ChatWindowFooterInputArea>
             <C.ChatWindowFooterPos>
-                <Button>
-                    <SendIcon style={{ color: '#919191' }} />
-                </Button>
+                {text.length > 0 &&
+                    <Button onClick={handleSendClick}>
+                        <SendIcon style={{ color: '#919191' }} />
+                    </Button>
+                }
+
+                {text.length === 0 &&
+                    <Button onClick={handleMicClick}>
+                        <MicIcon style={{ color: `${listening ? '#126ECE' : '#919191'}` }} />
+                    </Button>
+                }
             </C.ChatWindowFooterPos>
         </C.ChatWindowFooterArea>
     )
