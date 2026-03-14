@@ -1,4 +1,4 @@
-import { JSX } from "react";
+import { ChangeEvent, Dispatch, JSX, SetStateAction, useState } from "react";
 import * as C from "./chat-window-footer.styles";
 import { Button } from "../../common/Button.style";
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
@@ -10,9 +10,17 @@ type Props = {
     openEmojiArea: () => void;
     closeEmojiArea: () => void;
     isEmojiAreaOpen: boolean;
+    text: string;
+    handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ChatWindowFooter = ({ openEmojiArea, closeEmojiArea, isEmojiAreaOpen }: Props): JSX.Element => {
+export const ChatWindowFooter = ({ 
+    openEmojiArea, 
+    closeEmojiArea, 
+    isEmojiAreaOpen, 
+    text, 
+    handleInputChange 
+}: Props): JSX.Element => {
     return (
         <C.ChatWindowFooterArea>
             <C.ChatWindowFooterPre>
@@ -26,7 +34,12 @@ export const ChatWindowFooter = ({ openEmojiArea, closeEmojiArea, isEmojiAreaOpe
                 </Button>
             </C.ChatWindowFooterPre>
             <C.ChatWindowFooterInputArea>
-                <C.ChatWindowFooterInput type="text" placeholder="Digite uma mensagem" />
+                <C.ChatWindowFooterInput 
+                    type="text" 
+                    placeholder="Digite uma mensagem" 
+                    value={text}
+                    onChange={handleInputChange}
+                />
             </C.ChatWindowFooterInputArea>
             <C.ChatWindowFooterPos>
                 <Button>

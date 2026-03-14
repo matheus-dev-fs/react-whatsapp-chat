@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const ChatListItemArea = styled.div<{ active: boolean }>`
+export const ChatListItemArea = styled.div<{ $active: boolean }>`
     display: flex;
     cursor: pointer;
     align-items: center;
     height: 70px;
-    background-color: ${(props: { active: boolean }) => (props.active ? "#EBEBEB" : "")};
+    background-color: ${(props: { $active: boolean }) => (props.$active ? "#EBEBEB" : "")};
 
     &:hover {
         background-color: #F5F5F5;

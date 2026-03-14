@@ -10,7 +10,7 @@ type Props = {
 
 export const ChatListItem = ({ onClick, active, chat }: Props): JSX.Element => {
     return (
-        <C.ChatListItemArea onClick={onClick} active={active}>
+        <C.ChatListItemArea onClick={onClick} $active={active}>
             <C.ChatListItemAvatar src={chat.avatar} alt="Avatar"/>
 
             <C.ChatListItemLines>

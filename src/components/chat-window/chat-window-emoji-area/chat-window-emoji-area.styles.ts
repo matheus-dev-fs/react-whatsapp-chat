@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const ChatWindowEmojiArea = styled.div<{ isEmojiAreaOpen: boolean }>`
-    height: ${(props) => (props.isEmojiAreaOpen ? '230px' : '0')};
+export const ChatWindowEmojiArea = styled.div<{ $isEmojiAreaOpen: boolean }>`
+    height: ${(props) => (props.$isEmojiAreaOpen ? '250px' : '0')};
     overflow-y: hidden;
     transition: all 0.3s ease;
 
