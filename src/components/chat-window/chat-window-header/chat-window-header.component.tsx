@@ -5,13 +5,18 @@ import { Button } from "../../common/Button.style";
 import SearchIcon from '@mui/icons-material/Search';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { User } from "../../../types/user.type";
 
-export const ChatWindowHeader = (): JSX.Element => {
+type Props = {
+    loggedUser: User;
+}
+
+export const ChatWindowHeader = ({ loggedUser }: Props): JSX.Element => {
     return (
         <C.ChatWindowHeaderArea>
             <C.ChatWindowHeaderInfo>
-                <C.ChatWindowHeaderAvatar src={avatarSvg} />
-                <C.ChatWindowHeaderName>Dua Lipa</C.ChatWindowHeaderName>
+                <C.ChatWindowHeaderAvatar src={loggedUser.avatar} />
+                <C.ChatWindowHeaderName>{loggedUser.name}</C.ChatWindowHeaderName>
             </C.ChatWindowHeaderInfo>
 
             <C.ChatWindowHeaderButtons>

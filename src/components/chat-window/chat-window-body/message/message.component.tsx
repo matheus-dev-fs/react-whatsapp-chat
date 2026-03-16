@@ -1,16 +1,20 @@
 import { JSX } from "react";
 import * as C from "./message.styles"
+import { MessageType } from "../../../../types/message.type";
+import { formatTime24h } from "../../../../utils/format-time-24h.util";
+import { User } from "../../../../types/user.type";
 
 type Props = {
-    message: string;
+    message: MessageType;
+    loggedUser: User;
 }
 
-export const Message = ({ message }: Props): JSX.Element => {
+export const Message = ({ message, loggedUser }: Props): JSX.Element => {
     return (
-        <C.MessageArea>
-            <C.Message>
-                <C.MessageText>bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla</C.MessageText>
-                <C.MessageDate>12:00</C.MessageDate>
+        <C.MessageArea $isOwn={message.authorId === loggedUser.id}>
+            <C.Message $isOwn={message.authorId === loggedUser.id}>
+                <C.MessageText>{message.text}</C.MessageText>
+                <C.MessageDate>{formatTime24h(message.date)}</C.MessageDate>
             </C.Message>
         </C.MessageArea>
     );

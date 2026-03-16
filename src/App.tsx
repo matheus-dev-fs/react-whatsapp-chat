@@ -8,6 +8,7 @@ import { ChatIntro } from "./components/chat-intro/chat-intro.component";
 import { ChatWindow } from "./components/chat-window/chat-window.component";
 import avatarSvg from "./assets/svgs/avatar.svg";
 import { ChatListItemType } from "./types/chat-list-item.type";
+import { User } from "./types/user.type";
 
 const App = (): JSX.Element => {
     const [chatList, setChatList]: [
@@ -46,6 +47,11 @@ const App = (): JSX.Element => {
         },
     ]);
 
+    const [user, setUser]: [
+        User, 
+        Dispatch<SetStateAction<User>>
+    ] = useState({ id: 789, avatar: avatarSvg, name: "Dua Lipa" });
+
     const [activeChat, setActiveChat]: [
         ChatListItemType | undefined,
         Dispatch<SetStateAction<ChatListItemType | undefined>>
@@ -70,7 +76,7 @@ const App = (): JSX.Element => {
                 </C.Sidebar>
                 <C.ContentArea>
                     {activeChat?.chatId !== undefined &&
-                        <ChatWindow />
+                        <ChatWindow loggedUser={user} />
                     }
                     {activeChat?.chatId === undefined &&
                         <ChatIntro />
