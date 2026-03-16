@@ -33,6 +33,11 @@ export const ChatWindow = (): JSX.Element => {
         Dispatch<SetStateAction<boolean>>
     ] = useState<boolean>(false);
 
+    const [messages, setMessages]: [
+        any[],
+        Dispatch<SetStateAction<any[]>>
+    ] = useState<any[]>([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const newText: string = event.target.value;
         setText(newText);
@@ -73,7 +78,7 @@ export const ChatWindow = (): JSX.Element => {
     return (
         <C.ChatWindowArea>
             <ChatWindowHeader />
-            <ChatWindowBody />
+            <ChatWindowBody messages={messages}/>
             <ChatWindowEmojiArea
                 onEmojiClick={handleEmojiClick}
                 isEmojiAreaOpen={isEmojiAreaOpen}

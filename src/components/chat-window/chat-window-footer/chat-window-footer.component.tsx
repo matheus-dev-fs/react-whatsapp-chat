@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, JSX, SetStateAction, useState } from "react";
+import { ChangeEvent, JSX} from "react";
 import * as C from "./chat-window-footer.styles";
 import { Button } from "../../common/Button.style";
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
