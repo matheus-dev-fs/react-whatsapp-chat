@@ -9,8 +9,14 @@ import { ChatWindow } from "./components/chat-window/chat-window.component";
 import avatarSvg from "./assets/svgs/avatar.svg";
 import { ChatListItemType } from "./types/chat-list-item.type";
 import { User } from "./types/user.type";
+import { NewChat } from "./components/new-chat/new-chat.component";
 
 const App = (): JSX.Element => {
+    const [newChatActive, setNewChatActive]: [
+        boolean, 
+        Dispatch<SetStateAction<boolean>>
+    ] = useState<boolean>(false);
+
     const [chatList, setChatList]: [
         ChatListItemType[],
         Dispatch<SetStateAction<ChatListItemType[]>>
@@ -66,7 +72,13 @@ const App = (): JSX.Element => {
             <GlobalStyles />
             <C.AppWindow>
                 <C.Sidebar>
-                    <Header />
+                    <NewChat 
+                        loggedUser={user} 
+                        setActive={setNewChatActive} 
+                        active={newChatActive} 
+                        chatList={chatList} 
+                    />
+                    <Header setActive={setNewChatActive} />
                     <Search />
                     <ChatList 
                         chatList={chatList} 
