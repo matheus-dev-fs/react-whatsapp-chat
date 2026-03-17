@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 const firebaseConfig: { [key: string]: string } = {
   apiKey: process.env.REACT_APP_API_KEY as string,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN as string,

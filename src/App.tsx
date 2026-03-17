@@ -10,10 +10,12 @@ import avatarSvg from "./assets/svgs/avatar.svg";
 import { ChatListItemType } from "./types/chat-list-item.type";
 import { User } from "./types/user.type";
 import { NewChat } from "./components/new-chat/new-chat.component";
+import { Login } from "./components/login/login.component";
+import { UserCredential } from "firebase/auth";
 
 const App = (): JSX.Element => {
     const [newChatActive, setNewChatActive]: [
-        boolean, 
+        boolean,
         Dispatch<SetStateAction<boolean>>
     ] = useState<boolean>(false);
 
@@ -54,9 +56,9 @@ const App = (): JSX.Element => {
     ]);
 
     const [user, setUser]: [
-        User, 
-        Dispatch<SetStateAction<User>>
-    ] = useState({ id: 789, avatar: avatarSvg, name: "Dua Lipa" });
+        User | null,
+        Dispatch<SetStateAction<User | null>>
+    ] = useState<User | null>(null);
 
     const [activeChat, setActiveChat]: [
         ChatListItemType | undefined,
@@ -67,34 +69,47 @@ const App = (): JSX.Element => {
         setActiveChat(chatList[index]);
     }
 
+    const handleLoginData = (credential: UserCredential): void => {
+         const firebaseUser = credential.user;
+
+        const newUser: User = {
+            id: Number(firebaseUser.uid),
+            name: firebaseUser.displayName ?? "",
+            avatar: firebaseUser.photoURL ?? "",
+        }
+        setUser(newUser);
+    }
+
     return (
         <>
             <GlobalStyles />
-            <C.AppWindow>
-                <C.Sidebar>
-                    <NewChat 
-                        loggedUser={user} 
-                        setActive={setNewChatActive} 
-                        active={newChatActive} 
-                        chatList={chatList} 
-                    />
-                    <Header setActive={setNewChatActive} />
-                    <Search />
-                    <ChatList 
-                        chatList={chatList} 
-                        onClick={handleChatListItemClick}
-                        activeChatId={activeChat?.chatId} 
-                    />
-                </C.Sidebar>
-                <C.ContentArea>
-                    {activeChat?.chatId !== undefined &&
-                        <ChatWindow loggedUser={user} />
-                    }
-                    {activeChat?.chatId === undefined &&
-                        <ChatIntro />
-                    }
-                </C.ContentArea>
-            </C.AppWindow>
+            {!user && <Login onLogin={handleLoginData} />}
+            {user &&
+                <C.AppWindow>
+                    <C.Sidebar>
+                        <NewChat
+                            loggedUser={user}
+                            setActive={setNewChatActive}
+                            active={newChatActive}
+                            chatList={chatList}
+                        />
+                        <Header setActive={setNewChatActive} loggedUser={user} />
+                        <Search />
+                        <ChatList
+                            chatList={chatList}
+                            onClick={handleChatListItemClick}
+                            activeChatId={activeChat?.chatId}
+                        />
+                    </C.Sidebar>
+                    <C.ContentArea>
+                        {activeChat?.chatId !== undefined &&
+                            <ChatWindow loggedUser={user} />
+                        }
+                        {activeChat?.chatId === undefined &&
+                            <ChatIntro />
+                        }
+                    </C.ContentArea>
+                </C.AppWindow>}
         </>
     );
 };
