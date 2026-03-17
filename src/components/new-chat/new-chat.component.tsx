@@ -28,8 +28,14 @@ export const NewChat = ({ setActive, active, loggedUser, chatList }: Props): JSX
         }
 
         getList();
+
     }, [loggedUser]);
 
+
+    const addNewChat = async (user2: User): Promise<void> => {
+        await Api.addNewChat(loggedUser, user2);
+        handleBackButtonClick();
+    }
 
     const handleBackButtonClick = (): void => {
         setActive(false);
@@ -44,8 +50,13 @@ export const NewChat = ({ setActive, active, loggedUser, chatList }: Props): JSX
                 <C.NewChatHeadTitle>Nova conversa</C.NewChatHeadTitle>
             </C.NewChatHeader>
             <C.NewChatList>
-                {list.map((item, index: number): JSX.Element => (
-                    <NewChatItem key={index} name={item.name} avatar={item.avatar} />
+                {list.map((item: User, index: number): JSX.Element => (
+                    <NewChatItem 
+                        key={index} 
+                        name={item.name} 
+                        avatar={item.avatar} 
+                        onClick={() => addNewChat(item)}
+                    />
                 ))}
             </C.NewChatList>
         </C.NewChatArea>
