@@ -23,38 +23,7 @@ const App = (): JSX.Element => {
     const [chatList, setChatList]: [
         ChatListItemType[],
         Dispatch<SetStateAction<ChatListItemType[]>>
-    ] = useState([
-        {
-            chatId: 1,
-            title: "Chat 1",
-            avatar: avatarSvg,
-        },
-        {
-            chatId: 2,
-            title: "Chat 2",
-            avatar: avatarSvg,
-        },
-        {
-            chatId: 3,
-            title: "Chat 3",
-            avatar: avatarSvg,
-        },
-        {
-            chatId: 4,
-            title: "Chat 4",
-            avatar: avatarSvg,
-        },
-        {
-            chatId: 5,
-            title: "Chat 5",
-            avatar: avatarSvg,
-        },
-        {
-            chatId: 6,
-            title: "Chat 6",
-            avatar: avatarSvg,
-        },
-    ]);
+    ] = useState<ChatListItemType[]>([]);
 
     const [user, setUser]: [
         User | null,

@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { doc, Firestore, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, DocumentData, Firestore, getDocs, getFirestore, QuerySnapshot, setDoc } from "firebase/firestore";
 import firebaseConfig from "./firebase.config";
 import { Auth, GoogleAuthProvider, UserCredential, getAuth, signInWithPopup } from "firebase/auth";
 import { User } from "../types/user.type";
@@ -24,5 +24,25 @@ export default {
             },
             { merge: true }
         );
+    },
+    getContactList: async (userId: string): Promise<User[]> => {
+        const list: User[] = [];
+        const result: QuerySnapshot<DocumentData, DocumentData> = await getDocs(collection(db, "users"));
+        
+        result.forEach((doc) => {
+            const data = doc.data();
+
+            if (data.id === userId) {
+                return;
+            }
+
+            list.push({
+                id: data.id,
+                name: data.name,
+                avatar: data.avatar
+            });
+        });
+
+        return list;
     }
 };
