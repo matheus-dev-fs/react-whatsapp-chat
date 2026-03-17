@@ -12,6 +12,7 @@ import { User } from "./types/user.type";
 import { NewChat } from "./components/new-chat/new-chat.component";
 import { Login } from "./components/login/login.component";
 import { UserCredential } from "firebase/auth";
+import Api from "./services/firebase.service";
 
 const App = (): JSX.Element => {
     const [newChatActive, setNewChatActive]: [
@@ -69,14 +70,17 @@ const App = (): JSX.Element => {
         setActiveChat(chatList[index]);
     }
 
-    const handleLoginData = (credential: UserCredential): void => {
-         const firebaseUser = credential.user;
+    const handleLoginData = async (credential: UserCredential): Promise<void> => {
+        const firebaseUser = credential.user;
 
         const newUser: User = {
-            id: Number(firebaseUser.uid),
+            id: firebaseUser.uid,
             name: firebaseUser.displayName ?? "",
             avatar: firebaseUser.photoURL ?? "",
         }
+
+        await Api.addUser(newUser);
+
         setUser(newUser);
     }
 
