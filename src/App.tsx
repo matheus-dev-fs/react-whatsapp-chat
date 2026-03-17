@@ -1,4 +1,4 @@
-import { JSX, useState, SetStateAction, Dispatch } from "react";
+import { JSX, useState, SetStateAction, Dispatch, useEffect } from "react";
 import * as C from "./App.styles";
 import GlobalStyles from "./Global.styles";
 import { Header } from "./components/header/header.component";
@@ -11,7 +11,7 @@ import { ChatListItemType } from "./types/chat-list-item.type";
 import { User } from "./types/user.type";
 import { NewChat } from "./components/new-chat/new-chat.component";
 import { Login } from "./components/login/login.component";
-import { UserCredential } from "firebase/auth";
+import { Unsubscribe, UserCredential } from "firebase/auth";
 import Api from "./services/firebase.service";
 
 const App = (): JSX.Element => {
@@ -34,6 +34,15 @@ const App = (): JSX.Element => {
         ChatListItemType | undefined,
         Dispatch<SetStateAction<ChatListItemType | undefined>>
     ] = useState<ChatListItemType | undefined>(undefined);
+
+    useEffect((): (() => void) | undefined => {
+        if (!user) {
+            return;
+        }
+
+        const unsubscribe: Unsubscribe = Api.onChatList(user.id, setChatList);
+        return (): void => unsubscribe();
+    }, [user]);
 
     const handleChatListItemClick = (index: number): void => {
         setActiveChat(chatList[index]);

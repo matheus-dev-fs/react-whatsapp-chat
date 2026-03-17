@@ -8,6 +8,7 @@ import {
     Firestore,
     getDocs,
     getFirestore,
+    onSnapshot,
     QuerySnapshot,
     setDoc,
     updateDoc
@@ -21,6 +22,8 @@ import {
     signInWithPopup
 } from "firebase/auth";
 import { User } from "../types/user.type";
+import { Dispatch, SetStateAction } from "react";
+import { ChatListItemType } from "../types/chat-list-item.type";
 
 const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(firebaseApp);
@@ -94,6 +97,18 @@ export default {
                 image: user1.avatar,
                 with: user1.id
             })
+        });
+    },
+    onChatList:(userId: string, setChatList: Dispatch<SetStateAction<ChatListItemType[]>>) => {
+        return onSnapshot(doc(db, "users", userId), (docSnap) => {
+            if (!docSnap.exists()) {
+                console.error(`User with id ${userId} does not exist.`);
+                return;
+            }
+
+            const data = docSnap.data();
+            const chats = data?.chats ?? [];
+            setChatList(chats);
         });
     }
 };
