@@ -6,5 +6,6 @@ export type ChatListItemType = {
     avatar: string;
     lastMessage?: string;
     lastMessageDate?: Date;
+    image: string;
 };
 

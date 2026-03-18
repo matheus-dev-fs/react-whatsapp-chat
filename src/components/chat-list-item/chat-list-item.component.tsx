@@ -12,7 +12,7 @@ type Props = {
 export const ChatListItem = ({ onClick, active, chat }: Props): JSX.Element => {
     return (
         <C.ChatListItemArea onClick={onClick} $active={active}>
-            <C.ChatListItemAvatar src={chat.avatar} alt="Avatar"/>
+            <C.ChatListItemAvatar src={chat.image} alt="Avatar"/>
 
             <C.ChatListItemLines>
                 <C.ChatListItemLine className="chatListItemName">

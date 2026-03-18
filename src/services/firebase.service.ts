@@ -108,8 +108,20 @@ export default {
             }
 
             const data = docSnap.data();
-            const chats = data?.chats ?? [];
-            setChatList(chats);
+            const chats: ChatListItemType[] = data?.chats ?? [];
+            const orderedChats: ChatListItemType[] = chats.sort((a: ChatListItemType, b: ChatListItemType): number => {
+                if (a.lastMessageDate === undefined || b.lastMessageDate === undefined) {
+                    return -1;
+                }
+
+                if (a.lastMessageDate.seconds < b.lastMessageDate?.seconds) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+
+            setChatList(orderedChats);
         });
     },
     onChatContent: (
@@ -127,7 +139,6 @@ export default {
             const messages = data?.messages ?? [];
             setMessages(messages);
             setUsers(data?.users ?? []);
-            console.log("Chat content updated:", messages);
         });
     },
     sendMessage: async (
