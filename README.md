@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# React WhatsApp Chat (Clone)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Clone funcional (simplificado) do WhatsApp feito em **React + TypeScript**, com **Firebase Auth + Firestore**.
 
-## Available Scripts
+Projeto desenvolvido durante o curso de **React da B7Web**, porém **consideravelmente aprimorado** por mim com foco em **organização**, **tipagem** e **clean code**.
 
-In the project directory, you can run:
+## Funcionalidades
 
-### `npm start`
+- **Login com Google** via Firebase Authentication (popup)
+- Criação/armazenamento de usuários no **Firestore**
+- Listagem de contatos para iniciar uma **Nova conversa**
+- Lista de chats do usuário (ordenada pela última mensagem)
+- Chat em tempo real com:
+  - envio de mensagens (texto)
+  - **emojis** (emoji-picker)
+  - **microfone / SpeechRecognition** (transcrição no input, quando suportado pelo navegador)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Melhorias aplicadas (em relação ao projeto base do curso)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **Troca do provider de autenticação**
+  - Neste projeto o login é feito com **Google Auth**
+  - No projeto original do curso, o login era feito com **Facebook Auth**
+- **Migração e uso consistente de TypeScript**
+  - Tipos dedicados em `src/types/` (ex.: `User`, `ChatListItemType`, `MessageType`, etc.)
+  - Props tipadas nos componentes e melhor previsibilidade do fluxo de dados
+- **Estilização com styled-components**
+  - Este projeto usa **styled-components** para organizar e encapsular estilos por componente
+  - No projeto base do curso, a abordagem era com **CSS padrão**
+- **Separação de responsabilidades**
+  - Integração com Firebase centralizada em `src/services/firebase.service.ts`
+  - Config do Firebase isolada em `src/services/firebase.config.ts` (lendo variáveis de ambiente)
+- **Organização de pastas e componentes**
+  - Componentes agrupados por contexto em `src/components/` (ex.: `chat-window`, `chat-list`, `login`, `new-chat`, etc.)
+- **Funções utilitárias**
+  - Ex.: `src/utils/format-seconds-to-hour.ts` para formatar horários
+- **Tratamento básico de erros / cenários inválidos**
+  - Logs e validações em pontos críticos (ex.: usuário inexistente, chat inexistente, ausência de dados ao logar, etc.)
 
-### `npm test`
+## Tecnologias
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- React
+- TypeScript
+- Firebase (Auth + Firestore)
+- styled-components
+- MUI (Material UI) / Icons
+- emoji-picker-react
 
-### `npm run build`
+## Estrutura (visão geral)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `src/App.tsx`  
+  Controla autenticação, sidebar (header, busca, lista), seleção do chat e renderização da janela do chat.
+- `src/services/firebase.service.ts`  
+  Camada de integração com Firebase:
+  - login (`loginPopup`)
+  - criação de usuário (`addUser`)
+  - listagem de contatos (`getContactList`)
+  - criação de chat (`addNewChat`)
+  - listeners em tempo real (`onChatList`, `onChatContent`)
+  - envio de mensagem e atualização do “last message” (`sendMessage`)
+- `src/components/`  
+  Componentes de UI (Login, Header, NewChat, ChatList, ChatWindow, etc.)
+- `src/types/`  
+  Tipos principais da aplicação
+- `src/utils/`  
+  Utilitários
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Configuração do Firebase (ENV)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Existe um `.env.example` no projeto. Crie um arquivo `.env` na raiz seguindo o mesmo padrão:
 
-### `npm run eject`
+```env
+REACT_APP_API_KEY=...
+REACT_APP_AUTH_DOMAIN=...
+REACT_APP_PROJECT_ID=...
+REACT_APP_STORAGE_BUCKET=...
+REACT_APP_MESSAGING_SENDER_ID=...
+REACT_APP_ID=...
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Depois, configure no Firebase:
+- **Authentication**: habilite o provider **Google**
+- **Firestore Database**: crie o banco e utilize as coleções `users` e `chats`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Como rodar
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm install
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Acesse: `http://localhost:3000`
 
-## Learn More
+## Notas
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- A feature de **microfone (SpeechRecognition)** depende do suporte do navegador (`window.SpeechRecognition` / `webkitSpeechRecognition`). Se não existir, o app apenas ignora essa funcionalidade.
