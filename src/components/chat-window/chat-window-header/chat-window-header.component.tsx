@@ -5,18 +5,18 @@ import { Button } from "../../common/Button.style";
 import SearchIcon from '@mui/icons-material/Search';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { User } from "../../../types/user.type";
+import { ChatListItemType } from "../../../types/chat-list-item.type";
 
 type Props = {
-    loggedUser: User;
+    activeChat: ChatListItemType;
 }
 
-export const ChatWindowHeader = ({ loggedUser }: Props): JSX.Element => {
+export const ChatWindowHeader = ({ activeChat }: Props): JSX.Element => {
     return (
         <C.ChatWindowHeaderArea>
             <C.ChatWindowHeaderInfo>
-                <C.ChatWindowHeaderAvatar src={loggedUser.avatar} />
-                <C.ChatWindowHeaderName>{loggedUser.name}</C.ChatWindowHeaderName>
+                <C.ChatWindowHeaderAvatar src={activeChat.avatar} />
+                <C.ChatWindowHeaderName>{activeChat.title}</C.ChatWindowHeaderName>
             </C.ChatWindowHeaderInfo>
 
             <C.ChatWindowHeaderButtons>

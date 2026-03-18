@@ -5,6 +5,7 @@ import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
+import { KeyboardEvent } from "react";
 
 type Props = {
     openEmojiArea: () => void;
@@ -12,6 +13,7 @@ type Props = {
     isEmojiAreaOpen: boolean;
     text: string;
     handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleInputKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void;
     handleSendClick?: () => void;
     handleMicClick?: () => void;
     listening: boolean;
@@ -23,6 +25,7 @@ export const ChatWindowFooter = ({
     isEmojiAreaOpen,
     text,
     handleInputChange,
+    handleInputKeyUp,
     handleSendClick,
     handleMicClick,
     listening
@@ -45,6 +48,7 @@ export const ChatWindowFooter = ({
                     placeholder="Digite uma mensagem"
                     value={text}
                     onChange={handleInputChange}
+                    onKeyUp={handleInputKeyUp}
                 />
             </C.ChatWindowFooterInputArea>
             <C.ChatWindowFooterPos>

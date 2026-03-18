@@ -85,7 +85,7 @@ const App = (): JSX.Element => {
                     </C.Sidebar>
                     <C.ContentArea>
                         {activeChat?.chatId !== undefined &&
-                            <ChatWindow loggedUser={user} />
+                            <ChatWindow loggedUser={user} activeChat={activeChat}/>
                         }
                         {activeChat?.chatId === undefined &&
                             <ChatIntro />

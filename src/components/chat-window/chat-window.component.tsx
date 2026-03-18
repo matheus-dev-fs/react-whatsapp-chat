@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, JSX, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, JSX, SetStateAction, useEffect, useState, KeyboardEvent } from "react";
 import * as C from "./chat-window.style";
 import { ChatWindowHeader } from "./chat-window-header/chat-window-header.component";
 import { ChatWindowBody } from "./chat-window-body/chat-window-body.component";
@@ -7,12 +7,16 @@ import { ChatWindowEmojiArea } from "./chat-window-emoji-area/chat-window-emoji-
 import { EmojiClickData } from "emoji-picker-react";
 import { MessageType } from "../../types/message.type";
 import { User } from "../../types/user.type";
+import { ChatListItemType } from "../../types/chat-list-item.type";
+import Api from "../../services/firebase.service";
+import { Unsubscribe } from "firebase/auth";
 
 type Props = {
     loggedUser: User;
+    activeChat: ChatListItemType;
 }
 
-export const ChatWindow = ({ loggedUser }: Props): JSX.Element => {
+export const ChatWindow = ({ loggedUser, activeChat }: Props): JSX.Element => {
     const SpeechRecognitionCtor: {
         new(): SpeechRecognition;
         prototype: SpeechRecognition;
@@ -42,28 +46,22 @@ export const ChatWindow = ({ loggedUser }: Props): JSX.Element => {
     const [messages, setMessages]: [
         MessageType[],
         Dispatch<SetStateAction<MessageType[]>>
-    ] = useState<MessageType[]>([
-        { text: "Hello!", date: new Date(), authorId: "789" },
-        { text: "How are you?", date: new Date(), authorId: "456" },
-        { text: "I'm doing great!", date: new Date(), authorId: "789" },
-        { text: "That's awesome!", date: new Date(), authorId: "456" },
-        { text: "What about you?", date: new Date(), authorId: "789" },
-        { text: "I'm good too.", date: new Date(), authorId: "456" },
-        { text: "Great to hear!", date: new Date(), authorId: "789" },
-        { text: "Let's chat more later.", date: new Date(), authorId: "456" },
-        { text: "Sure thing!", date: new Date(), authorId: "789" },
-        { text: "Talk to you then!", date: new Date(), authorId: "456" },
-        { text: "Hello!", date: new Date(), authorId: "789" },
-        { text: "How are you?", date: new Date(), authorId: "456" },
-        { text: "I'm doing great!", date: new Date(), authorId: "789" },
-        { text: "That's awesome!", date: new Date(), authorId: "456" },
-        { text: "What about you?", date: new Date(), authorId: "789" },
-        { text: "I'm good too.", date: new Date(), authorId: "456" },
-        { text: "Great to hear!", date: new Date(), authorId: "789" },
-        { text: "Let's chat more later.", date: new Date(), authorId: "456" },
-        { text: "Sure thing!", date: new Date(), authorId: "789" },
-        { text: "Talk to you then!", date: new Date(), authorId: "456" },
-    ]);
+    ] = useState<MessageType[]>([]);
+
+    const [users, setUsers]: [
+        string[],
+        Dispatch<SetStateAction<string[]>>
+    ] = useState<string[]>([]);
+
+    useEffect((): (() => void) | void => {
+        if (!activeChat.chatId) {
+            return;
+        }
+
+        setMessages([]);
+        const unsub: Unsubscribe = Api.onChatContent(activeChat.chatId, setMessages, setUsers);
+        return (): void => unsub();
+    }, [activeChat.chatId]);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const newText: string = event.target.value;
@@ -76,8 +74,22 @@ export const ChatWindow = ({ loggedUser }: Props): JSX.Element => {
     };
 
     const handleSendClick = (): void => {
+        if (text.trim() === "") {
+            return;
+        }
 
+        Api.sendMessage(activeChat, loggedUser.id, "text", text, users);
+        setText("");
+        setIsEmojiAreaOpen(false);
     };
+
+    const handleInputKeyUp = (event: KeyboardEvent<HTMLInputElement>): void => {
+        if (!(event.key === "Enter" && text.trim() !== "")) {
+            return;
+        }
+
+        handleSendClick();
+    }
 
     const handleMicClick = (): void => {
         if (!recognition) {
@@ -104,7 +116,7 @@ export const ChatWindow = ({ loggedUser }: Props): JSX.Element => {
 
     return (
         <C.ChatWindowArea>
-            <ChatWindowHeader loggedUser={loggedUser}/>
+            <ChatWindowHeader activeChat={activeChat} />
             <ChatWindowBody 
                 messages={messages} 
                 loggedUser={loggedUser} 
@@ -119,6 +131,7 @@ export const ChatWindow = ({ loggedUser }: Props): JSX.Element => {
                 isEmojiAreaOpen={isEmojiAreaOpen}
                 text={text}
                 handleInputChange={handleInputChange}
+                handleInputKeyUp={handleInputKeyUp}
                 handleSendClick={handleSendClick}
                 handleMicClick={handleMicClick}
                 listening={listening}

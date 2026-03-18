@@ -6,7 +6,7 @@ import { ChatListItemType } from "../../types/chat-list-item.type";
 type Props = {
     chatList:   ChatListItemType[];
     onClick: (index: number) => void;
-    activeChatId: number | undefined;
+    activeChatId: string | undefined;
 }
 
 export const ChatList = ({ chatList, onClick, activeChatId }: Props): JSX.Element => {

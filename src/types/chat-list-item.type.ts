@@ -1,7 +1,7 @@
 import { Date } from "./date.type";
 
 export type ChatListItemType = {
-    chatId: number;
+    chatId: string;
     title: string;
     avatar: string;
     lastMessage?: string;

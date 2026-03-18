@@ -6,6 +6,7 @@ import {
     doc,
     DocumentData,
     Firestore,
+    getDoc,
     getDocs,
     getFirestore,
     onSnapshot,
@@ -99,7 +100,7 @@ export default {
             })
         });
     },
-    onChatList:(userId: string, setChatList: Dispatch<SetStateAction<ChatListItemType[]>>) => {
+    onChatList: (userId: string, setChatList: Dispatch<SetStateAction<ChatListItemType[]>>) => {
         return onSnapshot(doc(db, "users", userId), (docSnap) => {
             if (!docSnap.exists()) {
                 console.error(`User with id ${userId} does not exist.`);
@@ -110,5 +111,67 @@ export default {
             const chats = data?.chats ?? [];
             setChatList(chats);
         });
+    },
+    onChatContent: (
+        chatId: string, 
+        setMessages: Dispatch<SetStateAction<any[]>>, 
+        setUsers: Dispatch<SetStateAction<string[]>>
+    ) => {
+        return onSnapshot(doc(db, "chats", chatId), (docSnap) => {
+            if (!docSnap.exists()) {
+                console.error(`Chat with id ${chatId} does not exist.`);
+                return;
+            }
+
+            const data = docSnap.data();
+            const messages = data?.messages ?? [];
+            setMessages(messages);
+            setUsers(data?.users ?? []);
+            console.log("Chat content updated:", messages);
+        });
+    },
+    sendMessage: async (
+        chat: ChatListItemType, 
+        userId: string, 
+        type: string, 
+        body: string,
+        users: string[]
+    ): Promise<void> => {
+        await updateDoc(doc(db, "chats", chat.chatId), {
+            messages: arrayUnion({
+                type,
+                body,
+                authorId: userId,
+                date: new Date()
+            })
+        });
+
+        for (const uid of users) {
+            const userDoc = await getDoc(doc(db, "users", uid));
+            const userData = userDoc.data();
+
+            if (!userData) {
+                console.error(`User with id ${uid} does not exist.`);
+                continue;
+            }
+
+            if (!userData.chats) {
+                console.error(`User with id ${uid} does not have a chats field.`);
+                continue;
+            }
+
+            const chats = [...userData.chats];
+
+            for (const c of chats) {
+                if (c.chatId === chat.chatId) {
+                    c.lastMessage = body;
+                    c.lastMessageDate = new Date();
+                }
+            }
+
+            await updateDoc(doc(db, "users", uid), {
+                chats
+            });
+        }
     }
 };

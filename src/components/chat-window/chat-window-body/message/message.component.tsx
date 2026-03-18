@@ -1,8 +1,8 @@
 import { JSX } from "react";
 import * as C from "./message.styles"
 import { MessageType } from "../../../../types/message.type";
-import { formatTime24h } from "../../../../utils/format-time-24h.util";
 import { User } from "../../../../types/user.type";
+import { formatSecondsToHour } from "../../../../utils/format-seconds-to-hour";
 
 type Props = {
     message: MessageType;
@@ -13,8 +13,8 @@ export const Message = ({ message, loggedUser }: Props): JSX.Element => {
     return (
         <C.MessageArea $isOwn={message.authorId === loggedUser.id}>
             <C.Message $isOwn={message.authorId === loggedUser.id}>
-                <C.MessageText>{message.text}</C.MessageText>
-                <C.MessageDate>{formatTime24h(message.date)}</C.MessageDate>
+                <C.MessageText>{message.body}</C.MessageText>
+                <C.MessageDate>{formatSecondsToHour(message.date.seconds)}</C.MessageDate>
             </C.Message>
         </C.MessageArea>
     );
